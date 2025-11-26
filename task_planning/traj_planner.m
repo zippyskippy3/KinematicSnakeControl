@@ -1,7 +1,7 @@
 function X_DES = traj_planner(t)
 
 amplitude = deg2rad(45.0);
-wavelength = 4.0;
+wavelength = 6.0;
 freq = 2 * pi * 0.1;
 
 q_des = zeros(7, 1);

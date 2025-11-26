@@ -19,7 +19,7 @@ amp = deg2rad(45);
 q_snake_0 = zeros(7, 1);
 
 for i = 1:7
-    phase_position = (2 * pi * i) / 4;
+    phase_position = (2 * pi * i) / 6;
     
     q_snake_0(i) = amp * sin(phase_position);
 end
