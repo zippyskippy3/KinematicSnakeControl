@@ -10,4 +10,8 @@ q = randomConfiguration(robot);
 
 q_dot = zeros(size(q));
 
-M
+M_matrix = massMatrix(robot, q);
+
+G = gravityTorque(robot, q);
+
+C = velocityProduct(robot, q, q_dot);
