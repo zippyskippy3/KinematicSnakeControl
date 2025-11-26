@@ -52,7 +52,7 @@ view(3);
 ground_size = 5;
 patch([-ground_size, ground_size, ground_size, -ground_size], ...
       [-ground_size, -ground_size, ground_size, ground_size], ...
-      [0, 0, 0, 0], [0.8 0.8 0.8], 'FaceAlpha', 0.5);
+      [-0.2, -0.2, -0.2, -0.2], [0.8 0.8 0.8], 'FaceAlpha', 0.5);
 
 player = show(robot, X(1, 1:numJoints+3)', 'Visuals','on');
 for k = 1:size(X, 1)
