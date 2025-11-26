@@ -15,7 +15,24 @@ numJoints = 7;
 
 t_span = [0 15];
 
-q0 = zeros(10, 1);
+AMPLITUDE_RAD = deg2rad(45.0);
+WAVELENGTH = 4.0; % Number of body segments per full sine wave
+NUM_SNAKE_JOINTS = 7;
+
+q_snake_0 = zeros(NUM_SNAKE_JOINTS, 1);
+
+for i = 1:NUM_SNAKE_JOINTS
+    % Calculate the Spatial Phase Offset (Temporal part is zero since t=0)
+    phase_position = (2 * pi * i) / WAVELENGTH;
+    
+    % The initial joint position is set by the spatial phase
+    q_snake_0(i) = AMPLITUDE_RAD * sin(phase_position);
+end
+
+% --- Full Initial Position Vector (10x1) ---
+% Assuming your 10 DOFs are: [Base_X; Base_Y; Base_Yaw; J1..J7]
+q_base_0 = [0; 0; 0]; 
+q0 = [q_base_0; q_snake_0];
 dq0 = zeros(10, 1); 
 X0 = [q0; dq0];
 
