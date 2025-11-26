@@ -24,7 +24,6 @@ function tau_friction = calculate_friction_torque(robot, q, dq)
         
         e_t = R_body * [1; 0; 0]; 
         e_n = R_body * [0; 1; 0]; 
-        
 
         v_t = dot(v_linear, e_t) * e_t; 
         v_n = dot(v_linear, e_n) * e_n; 

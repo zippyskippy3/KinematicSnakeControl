@@ -1,24 +1,20 @@
 function X_DES = traj_planner(t)
-NUM_JOINTS = 7;
-JOINT_INDICES = 1:NUM_JOINTS;
 
-AMPLITUDE_DEG = 45.0;
-AMPLITUDE_RAD = deg2rad(AMPLITUDE_DEG);
-WAVELENGTH_SEGMENTS = 4.0;
-FREQUENCY_HZ = 0.5;
-ANGULAR_FREQUENCY = 2 * pi * FREQUENCY_HZ;
+amplitude = de2rad(45.0);
+wavelength = 4.0;
+freq = 2 * pi * 0.5
 
-q_des = zeros(NUM_JOINTS, 1);
-dq_des = zeros(NUM_JOINTS, 1);
+q_des = zeros(7, 1);
+dq_des = zeros(7, 1);
 
-for i = JOINT_INDICES
-    phase_position = (2 * pi * i) / WAVELENGTH_SEGMENTS;
-    phase_time = ANGULAR_FREQUENCY * t;
+for i = 1:7
+    phase_position = (2 * pi * i) / wavelength;
+    phase_time = freq * t;
     phase = phase_position - phase_time;
     
-    q_des(i) = AMPLITUDE_RAD * sin(phase);
+    q_des(i) = amplitude * sin(phase);
     
-    dq_des(i) = -AMPLITUDE_RAD * ANGULAR_FREQUENCY * cos(phase);
+    dq_des(i) = -amplitude * freq * cos(phase);
 end
 
 X_DES = [q_des; dq_des];
