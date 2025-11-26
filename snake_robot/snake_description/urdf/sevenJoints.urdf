@@ -57,11 +57,12 @@
 		
 		<inertial>
       <origin xyz="0.036 0 0" rpy="0 0 0"/> <mass value="1"/>
-      <inertia
-	  ixx="0.1" ixy="0.0" ixz="0.0"
-	  iyy="0.1" iyz="0.0"
-	  izz="0.1"/>
-    </inertial>
+      <mass value="100"/>
+	    <inertia
+		  ixx="1000" ixy="0.0" ixz="0.0"
+		  iyy="1000" iyz="0.0"
+		  izz="1000"/>
+	    </inertial>
 	</link>
 
 	<joint name="joint1" type="continuous">
@@ -91,12 +92,12 @@
 		</visual>
 
 		<inertial>
-	    <origin xyz="0 0 0.036" rpy="0 0 0"/>
-	    <mass value="1"/>
+	    <origin xyz="0 0.36 0" rpy="0 0 0"/>
+	    <mass value="100"/>
 	    <inertia
-		  ixx="0.1" ixy="0.0" ixz="0.0"
-		  iyy="0.1" iyz="0.0"
-		  izz="0.1"/>
+		  ixx="1000" ixy="0.0" ixz="0.0"
+		  iyy="1000" iyz="0.0"
+		  izz="1000"/>
 	    </inertial>
 	</link>
 
@@ -127,13 +128,13 @@
 		</visual>
 
 		<inertial>
-	    <origin xyz="0 0 0.036" rpy="0 0 0"/>
-	    <mass value="1"/>
+	    <origin xyz="0 0 0.36" rpy="0 0 0"/>
+	    <mass value="100"/>
 	    <inertia
-		  ixx="0.1" ixy="0.0" ixz="0.0"
-		  iyy="0.1" iyz="0.0"
-		  izz="0.1"/>
-	  </inertial>
+		  ixx="1000" ixy="0.0" ixz="0.0"
+		  iyy="1000" iyz="0.0"
+		  izz="1000"/>
+	    </inertial>
 	</link>
 
 	<joint name="joint3" type="continuous">
@@ -163,13 +164,13 @@
 		</visual>
 
 		<inertial>
-	    <origin xyz="0 0 0.036" rpy="0 0 0"/>
-	    <mass value="1"/>
+	    <origin xyz="0 0 0.36" rpy="0 0 0"/>
+	    <mass value="100"/>
 	    <inertia
-		  ixx="0.1" ixy="0.0" ixz="0.0"
-		  iyy="0.1" iyz="0.0"
-		  izz="0.1"/>
-    </inertial>
+		  ixx="1000" ixy="0.0" ixz="0.0"
+		  iyy="1000" iyz="0.0"
+		  izz="1000"/>
+	    </inertial>
 	</link>
 
 	<joint name="joint4" type="continuous">
@@ -200,12 +201,12 @@
 
 		<inertial>
 	    <origin xyz="0 0 0.36" rpy="0 0 0"/>
-	    <mass value="1"/>
+	    <mass value="100"/>
 	    <inertia
-		  ixx="0.1" ixy="0.0" ixz="0.0"
-		  iyy="0.1" iyz="0.0"
-		  izz="0.1"/>
-	  </inertial>
+		  ixx="1000" ixy="0.0" ixz="0.0"
+		  iyy="1000" iyz="0.0"
+		  izz="1000"/>
+	    </inertial>
 	</link>
 
 	<joint name="joint5" type="continuous">
@@ -235,13 +236,13 @@
 		</visual>
 
 		<inertial>
-	    <origin xyz="0 0 0.36" rpy="0 0 0"/>
-	    <mass value="1"/>
+	    <origin xyz="0 0.36 0" rpy="0 0 0"/>
+	    <mass value="100"/>
 	    <inertia
-		  ixx="0.1" ixy="0.0" ixz="0.0"
-		  iyy="0.1" iyz="0.0"
-		  izz="0.1"/>
-    </inertial>
+		  ixx="1000" ixy="0.0" ixz="0.0"
+		  iyy="1000" iyz="0.0"
+		  izz="1000"/>
+	    </inertial>
 	</link>
 
 	<joint name="joint6" type="continuous">
@@ -271,13 +272,13 @@
 		</visual>
 
 		<inertial>
-	    <origin xyz="0 0 0.36" rpy="0 0 0"/>
-	    <mass value="1"/>
+	    <origin xyz="0 0.36 0" rpy="0 0 0"/>
+	    <mass value="100"/>
 	    <inertia
-		  ixx="0.1" ixy="0.0" ixz="0.0"
-		  iyy="0.1" iyz="0.0"
-		  izz="0.1"/>
-	  </inertial>
+		  ixx="1000" ixy="0.0" ixz="0.0"
+		  iyy="1000" iyz="0.0"
+		  izz="1000"/>
+	    </inertial>
 	</link>
 
 	<joint name="joint7" type="continuous">
@@ -307,13 +308,13 @@
 		</visual>
 
 		<inertial>
-	    <origin xyz="0 0 0.36" rpy="0 0 0"/>
-	    <mass value="1"/>
+	    <origin xyz="0 0.36 0" rpy="0 0 0"/>
+	    <mass value="100"/>
 	    <inertia
-		  ixx="0.1" ixy="0.0" ixz="0.0"
-		  iyy="0.1" iyz="0.0"
-		  izz="0.1"/>
-    </inertial>
+		  ixx="1000" ixy="0.0" ixz="0.0"
+		  iyy="1000" iyz="0.0"
+		  izz="1000"/>
+	    </inertial>
 	</link>
 
 
@@ -380,4 +381,18 @@
 	  </joint>
 	  <actuator name="servo6">
 	    <mechanicalReduction>1</mechanicalReduction>
-	    <hardwareInterface>hard
+	    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+	  </actuator>
+	</transmission>
+
+	<transmission name="trans7">
+	  <type>transmission_interface/SimpleTransmission</type>
+	  <joint name="joint7">
+	    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+	  </joint>
+	  <actuator name="servo7">
+	    <mechanicalReduction>1</mechanicalReduction>
+	    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+	  </actuator>
+	</transmission>
+</robot>
