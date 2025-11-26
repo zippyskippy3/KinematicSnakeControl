@@ -1,0 +1,47 @@
+function tau_friction = calculate_friction_torque(robot, q, dq)
+
+    mu_t = 0.1;  
+    mu_n = 1.0;  
+    g = 9.81; 
+    
+    tau_friction = zeros(robot.NumNonFixedJoints, 1);
+    
+    bodyNames = {robot.BodyNames{2:end}};
+    
+    tau_friction_vector = zeros(robot.NumNonFixedJoints, 1);
+    
+    for i = 1:robot.NumNonFixedJoints
+        % 1. Get the Jacobian for the center of mass of the current link 
+        body_name = bodyNames{i};
+        body = getBody(robot, body_name);
+        
+        T_body = getTransform(robot, q, body_name);
+        R_body = T_body(1:3, 1:3); % Rotation matrix
+        
+        J_CoM = jacobianCenterOfMass(robot, q, body_name);
+        v_CoM = J_CoM * dq;
+        v_linear = v_CoM(1:3);
+        
+        e_t = R_body * [1; 0; 0]; 
+        e_n = R_body * [0; 1; 0]; 
+        
+
+        v_t = dot(v_linear, e_t) * e_t; 
+        v_n = dot(v_linear, e_n) * e_n; 
+        
+       
+        m = body.Mass; 
+        N = m * g;    
+        F_friction = (mu_t * N) * sign(v_t) + (mu_n * N) * sign(v_n);
+
+        J_CoM_linear = J_CoM(1:3, :); % Only linear part for force
+        tau_friction_link = J_CoM_linear' * F_friction;
+        
+        % Accumulate torques (Note: This is an over-simplification for accumulation. 
+        % A proper model would use the full robot dynamics model.)
+        tau_friction_vector = tau_friction_vector + tau_friction_link;
+    end
+    
+    tau_friction = tau_friction_vector;
+
+end

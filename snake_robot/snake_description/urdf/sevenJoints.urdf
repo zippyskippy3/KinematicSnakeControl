@@ -18,10 +18,30 @@
 	<!-- attach the base_link to world -->
   <link name="world"/>
 
-  <joint name="fixed" type="fixed">
-    <parent link="world"/>
-    <child link="base_link"/>
-  </joint>
+	<joint name="base_prismatic_x" type="prismatic">
+		<parent link="world"/>
+		<child link="base_intermediate_x"/>
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<axis xyz="1 0 0"/> <limit effort="1000" velocity="1000" lower="-10" upper="10"/>
+	</joint>
+
+	<link name="base_intermediate_x"/> 
+
+	<joint name="base_prismatic_y" type="prismatic">
+		<parent link="base_intermediate_x"/>
+		<child link="base_intermediate_y"/>
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<axis xyz="0 1 0"/> <limit effort="1000" velocity="1000" lower="-10" upper="10"/>
+	</joint>
+
+	<link name="base_intermediate_y"/>
+
+	<joint name="base_revolute_z" type="continuous">
+		<parent link="base_intermediate_y"/>
+		<child link="base_link"/>
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<axis xyz="0 0 1"/> <limit effort="1000" velocity="1000"/>
+	</joint>
 
 	<link name="base_link">
 		<visual>
@@ -31,7 +51,7 @@
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
 			</geometry>
 			<material name="Blue"/>
 		</visual>
@@ -67,7 +87,7 @@
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -102,7 +122,7 @@
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -137,7 +157,7 @@
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -172,7 +192,7 @@
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -207,7 +227,7 @@
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -242,7 +262,7 @@
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -277,7 +297,7 @@
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
