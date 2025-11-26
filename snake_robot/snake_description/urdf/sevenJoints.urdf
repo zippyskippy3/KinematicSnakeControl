@@ -18,40 +18,20 @@
 	<!-- attach the base_link to world -->
   <link name="world"/>
 
-	<joint name="base_prismatic_x" type="prismatic">
-		<parent link="world"/>
-		<child link="base_intermediate_x"/>
-		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<axis xyz="1 0 0"/> <limit effort="1000" velocity="1000" lower="-10" upper="10"/>
-	</joint>
-
-	<link name="base_intermediate_x"/> 
-
-	<joint name="base_prismatic_y" type="prismatic">
-		<parent link="base_intermediate_x"/>
-		<child link="base_intermediate_y"/>
-		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<axis xyz="0 1 0"/> <limit effort="1000" velocity="1000" lower="-10" upper="10"/>
-	</joint>
-
-	<link name="base_intermediate_y"/>
-
-	<joint name="base_revolute_z" type="continuous">
-		<parent link="base_intermediate_y"/>
-		<child link="base_link"/>
-		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<axis xyz="0 0 1"/> <limit effort="1000" velocity="1000"/>
-	</joint>
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
 
 	<link name="base_link">
 		<visual>
 			<origin
 				xyz="0. 0. 0."
-				rpy="1.57079632679 0 1.57079632679"
+				rpy="1.57079632679 1.57079632679 1.57079632679"
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
 			</geometry>
 			<material name="Blue"/>
 		</visual>
@@ -82,12 +62,12 @@
 	<link name="link2">
 		<visual>
 			<origin
-				xyz="0. 0. 0.072"
-				rpy="1.57079632679 0 0."
+				xyz="0. 0.072 0."
+				rpy="0 0 0."
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -104,8 +84,8 @@
 
 	<joint name="joint2" type="continuous">
 		<origin
-			xyz="0. 0. 0.072"
-			rpy="0. 0. 1.57079632679"
+			xyz="0. 0.072 0."
+			rpy="0. 0. 0"
 		/>
 		<parent link="link2"/>
 		<child link="link3"/>
@@ -117,12 +97,12 @@
 	<link name="link3">
 		<visual>
 			<origin
-				xyz="0. 0. 0.072"
-				rpy="1.57079632679 0 1.57079632679"
+				xyz="0. 0.072 0."
+				rpy="0 0 0"
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -139,8 +119,8 @@
 
 	<joint name="joint3" type="continuous">
 		<origin
-			xyz="0. 0. 0.072"
-			rpy="0. 0. -1.57079632679"
+			xyz="0. 0.072 0."
+			rpy="0. 0. 0"
 		/>
 		<parent link="link3"/>
 		<child link="link4"/>
@@ -152,12 +132,12 @@
 	<link name="link4">
 		<visual>
 			<origin
-				xyz="0. 0. 0.072"
-				rpy="1.57079632679 0 0."
+				xyz="0. 0.072 0."
+				rpy="0 0 0."
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -174,8 +154,8 @@
 
 	<joint name="joint4" type="continuous">
 		<origin
-			xyz="0. 0. 0.072"
-			rpy="0. 0. 1.57079632679"
+			xyz="0. 0.072 0."
+			rpy="0. 0. 0"
 		/>
 		<parent link="link4"/>
 		<child link="link5"/>
@@ -187,12 +167,12 @@
 	<link name="link5">
 		<visual>
 			<origin
-				xyz="0. 0. 0.072"
-				rpy="1.57079632679 0 1.57079632679"
+				xyz="0. 0.072 0."
+				rpy="0 0 0"
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -209,8 +189,8 @@
 
 	<joint name="joint5" type="continuous">
 		<origin
-			xyz="0. 0. 0.072"
-			rpy="0. 0. -1.57079632679"
+			xyz="0. 0.072 0."
+			rpy="0. 0. 0"
 		/>
 		<parent link="link5"/>
 		<child link="link6"/>
@@ -222,12 +202,12 @@
 	<link name="link6">
 		<visual>
 			<origin
-				xyz="0. 0. 0.072"
-				rpy="1.57079632679 0 0."
+				xyz="0. 0.072 0."
+				rpy="0 0 0."
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -244,8 +224,8 @@
 
 	<joint name="joint6" type="continuous">
 		<origin
-			xyz="0. 0. 0.072"
-			rpy="0. 0. 1.57079632679"
+			xyz="0. 0.072 0."
+			rpy="0. 0. 0"
 		/>
 		<parent link="link6"/>
 		<child link="link7"/>
@@ -257,12 +237,12 @@
 	<link name="link7">
 		<visual>
 			<origin
-				xyz="0. 0. 0.072"
-				rpy="1.57079632679 0 1.57079632679"
+				xyz="0. 0.072 0."
+				rpy="0 0 0"
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>
@@ -279,8 +259,8 @@
 
 	<joint name="joint7" type="continuous">
 		<origin
-			xyz="0. 0. 0.072"
-			rpy="0. 0. -1.57079632679"
+			xyz="0. 0.072 0."
+			rpy="0. 0. 0"
 		/>
 		<parent link="link7"/>
 		<child link="link8"/>
@@ -292,12 +272,12 @@
 	<link name="link8">
 		<visual>
 			<origin
-				xyz="0. 0. 0.072"
-				rpy="1.57079632679 0 0."
+				xyz="0. 0.072 0."
+				rpy="0 0 0."
 			/>
 			<geometry>
 				<mesh
-					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+					filename="package://snake_robot/snake_description/meshes/servo.stl" scale="0.001 0.001 0.001"/>
 			</geometry>
 			<material name="Green"/>
 		</visual>

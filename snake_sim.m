@@ -15,9 +15,9 @@ numJoints = 7;
 
 t_span = [0 15];
 
-q0 = zeros(numJoints + 3, 1);
-dq0 = zeros(numJoints + 3, 1);
-X0 = [q0; dq0]; 
+q0 = zeros(10, 1);
+dq0 = zeros(10, 1); 
+X0 = [q0; dq0];
 
 [T, X] = ode45(@(t, x) snakeDynamics(t, x, robot, 10), t_span, X0);
 

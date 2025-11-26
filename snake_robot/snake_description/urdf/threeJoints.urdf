@@ -27,7 +27,7 @@
 		<visual>
 			<origin
 				xyz="0. 0. 0."
-				rpy="1.57079632679 0 1.57079632679"
+				rpy="1.57079632679 1.57079632679 1.57079632679"
 			/>
 			<geometry>
 				<mesh
@@ -62,8 +62,8 @@
 	<link name="link2">
 		<visual>
 			<origin
-				xyz="0. 0. 0.072"
-				rpy="1.57079632679 0 0."
+				xyz="0. 0.072 0.0"
+				rpy="0 0 0"
 			/>
 			<geometry>
 				<mesh
