@@ -1,47 +1,40 @@
 function tau_friction = calculate_friction_torque(robot, q, dq)
 
-    mu_t = 0.1;  
-    mu_n = 1.0;  
+    mu_t = 1.0;  
+    mu_n = 5;  
     g = 9.81; 
     
-    tau_friction = zeros(robot.NumNonFixedJoints, 1);
+    bodyNames = robot.BodyNames(1:end); % gets names of moving links
     
-    bodyNames = {robot.BodyNames{2:end}};
+    tau_friction_vector = zeros(10, 1);
     
-    tau_friction_vector = zeros(robot.NumNonFixedJoints, 1);
-    
-    for i = 1:robot.NumNonFixedJoints
-        % 1. Get the Jacobian for the center of mass of the current link 
-        body_name = bodyNames{i};
-        body = getBody(robot, body_name);
-        
-        T_body = getTransform(robot, q, body_name);
-        R_body = T_body(1:3, 1:3); % Rotation matrix
-        
-        J_CoM = jacobianCenterOfMass(robot, q, body_name);
-        v_CoM = J_CoM * dq;
-        v_linear = v_CoM(1:3);
-        
-        e_t = R_body * [1; 0; 0]; 
-        e_n = R_body * [0; 1; 0]; 
-        
+    for i = 1:7
 
-        v_t = dot(v_linear, e_t) * e_t; 
-        v_n = dot(v_linear, e_n) * e_n; 
+        body_name = bodyNames{i}; % gets current link name
+        body = getBody(robot, body_name); % gets current link properties
         
+        T_body = getTransform(robot, q, body_name); % transform matrix
+        R_body = T_body(1:3, 1:3); % rotation matrix
+        
+        J_CoM = geometricJacobian(robot, q, body_name); % geometric jacobian of center of mass
+        v_CoM = J_CoM * dq; % spatial velocity
+        %disp(v_CoM);
+        v_linear = v_CoM(1:3); % linear velocity
+        
+        e_t = R_body * [0; 1; 0]; % tangential direction vector
+        e_n = R_body * [1; 0; 0]; % normal direction vector
+
+        v_t = dot(v_linear, e_t) * e_t; % tangential velocity
+        v_n = dot(v_linear, e_n) * e_n; % normal velocity
+        disp(e_t);
+        disp("v_linear: " + v_linear)
+        disp(e_n);
        
         m = body.Mass; 
-        N = m * g;    
-        F_friction = (mu_t * N) * sign(v_t) + (mu_n * N) * sign(v_n);
+        N = m * g;   
 
-        J_CoM_linear = J_CoM(1:3, :); % Only linear part for force
-        tau_friction_link = J_CoM_linear' * F_friction;
-        
-        % Accumulate torques (Note: This is an over-simplification for accumulation. 
-        % A proper model would use the full robot dynamics model.)
-        tau_friction_vector = tau_friction_vector + tau_friction_link;
-    end
-    
-    tau_friction = tau_friction_vector;
+        % 2. Calculate F_t (Tangential Friction): Low mu, aligned with e_t. 
+        % Add a small bias (1e-6) to ensure it breaks static friction (sign is non-zero).
+        F_t = (mu_t * N) * sign(v_t_scalar + 1e-6) * (e_t / norm(e_t)); 
 
-end
+        % 3. Calculate F_n (Normal Friction): High mu, aligned with e_n.

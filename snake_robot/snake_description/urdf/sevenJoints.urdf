@@ -74,7 +74,7 @@
 		<child link="link2"/>
 		<axis xyz="0 0 1"/>
 		<safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.5" soft_upper_limit="1.5"/>
-		<limit effort="0.01" lower="-1" upper="1" velocity="0.5"/>
+		<limit effort="1000" lower="-1" upper="1" velocity="0.5"/>
 		<dynamics damping="0.7"/>
 	</joint>
 
@@ -93,7 +93,7 @@
 
 		<inertial>
 	    <origin xyz="0 0.36 0" rpy="0 0 0"/>
-	    <mass value="100"/>
+	    <mass value="1000"/>
 	    <inertia
 		  ixx="1000" ixy="0.0" ixz="0.0"
 		  iyy="1000" iyz="0.0"
@@ -128,7 +128,7 @@
 		</visual>
 
 		<inertial>
-	    <origin xyz="0 0 0.36" rpy="0 0 0"/>
+	    <origin xyz="0 0.36 0" rpy="0 0 0"/>
 	    <mass value="100"/>
 	    <inertia
 		  ixx="1000" ixy="0.0" ixz="0.0"
@@ -146,7 +146,7 @@
 		<child link="link4"/>
 		<axis xyz="0 0 1"/>
 		<safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.5" soft_upper_limit="1.5"/>
-		<limit effort="0.01" lower="-1" upper="1" velocity="0.5"/>
+		<limit effort="1000" lower="-1" upper="1" velocity="0.5"/>
 		<dynamics damping="0.7"/>
 	</joint>
 
@@ -164,7 +164,7 @@
 		</visual>
 
 		<inertial>
-	    <origin xyz="0 0 0.36" rpy="0 0 0"/>
+	    <origin xyz="0 0.36 0" rpy="0 0 0"/>
 	    <mass value="100"/>
 	    <inertia
 		  ixx="1000" ixy="0.0" ixz="0.0"
@@ -182,7 +182,7 @@
 		<child link="link5"/>
 		<axis xyz="0 0 1"/>
 		<safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.5" soft_upper_limit="1.5"/>
-		<limit effort="0.01" lower="-1" upper="1" velocity="0.5"/>
+		<limit effort="1000" lower="-1" upper="1" velocity="0.5"/>
 		<dynamics damping="0.7"/>
 	</joint>
 
@@ -200,7 +200,7 @@
 		</visual>
 
 		<inertial>
-	    <origin xyz="0 0 0.36" rpy="0 0 0"/>
+	    <origin xyz="0 0.36 0" rpy="0 0 0"/>
 	    <mass value="100"/>
 	    <inertia
 		  ixx="1000" ixy="0.0" ixz="0.0"
@@ -218,7 +218,7 @@
 		<child link="link6"/>
 		<axis xyz="0 0 1"/>
 		<safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.5" soft_upper_limit="1.5"/>
-		<limit effort="0.01" lower="-1" upper="1" velocity="0.5"/>
+		<limit effort="1000" lower="-1" upper="1" velocity="0.5"/>
 		<dynamics damping="0.7"/>
 	</joint>
 
@@ -254,7 +254,7 @@
 		<child link="link7"/>
 		<axis xyz="0 0 1"/>
 		<safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.5" soft_upper_limit="1.5"/>
-		<limit effort="0.01" lower="-1" upper="1" velocity="0.5"/>
+		<limit effort="1000" lower="-1" upper="1" velocity="0.5"/>
 		<dynamics damping="0.7"/>
 	</joint>
 
@@ -290,7 +290,7 @@
 		<child link="link8"/>
 		<axis xyz="0 0 1"/>
 		<safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.5" soft_upper_limit="1.5"/>
-		<limit effort="0.01" lower="-1" upper="1" velocity="0.5"/>
+		<limit effort="1000" lower="-1" upper="1" velocity="0.5"/>
 		<dynamics damping="0.7"/>
 	</joint>
 

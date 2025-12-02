@@ -13,7 +13,7 @@ robot.DataFormat = 'column';
 
 numJoints = 7;
 
-t_span = [0 30];
+t_span = [0 60];
 
 amp = deg2rad(45);
 q_snake_0 = zeros(7, 1);
