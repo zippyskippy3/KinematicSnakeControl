@@ -33,7 +33,7 @@ X0 = [q0; dq0];
 table = [-1 1 1 -1; -0.2 -0.2 -0.1 -0.1];
 
 obstacle_stack = { table, [-1 -0.5 -0.5 -1; 0.5 0.5 1 1], [0.4 0.7 1 1 0.4; 0.6 0.4 0.6 1.2 1.2] };
-%%%END
+%%%
 
 [T, X] = ode45(@(t, x) snakeDynamics(t, x, robot, 10), t_span, X0);
 
@@ -60,27 +60,6 @@ patch([-ground_size, ground_size, ground_size, -ground_size], ...
       [-ground_size, -ground_size, ground_size, ground_size], ...
       [-0.2, -0.2, -0.2, -0.2], [0.8 0.8 0.8], 'FaceAlpha', 0.5);
 %%%OBSTACLES
-for i = 1:numel(obstacle_stack)
-    poly = obstacle_stack{i};   
-
-    px = poly(1,:);             
-    py = poly(2,:);          
-
-    z_bottom = -0.2 * ones(size(px));
-    z_top    =  0.3 * ones(size(px));
-
-    fill3(px, py, z_bottom, [1 0 0], 'FaceAlpha', 0.6, 'EdgeColor', 'none');
-    fill3(px, py, z_top,    [0.8 0 0], 'FaceAlpha', 0.6, 'EdgeColor', 'none');
-
-    for k = 1:numel(px)
-        k2 = mod(k, numel(px)) + 1;
-        xs = [px(k)  px(k2) px(k2) px(k)];
-        ys = [py(k)  py(k2) py(k2) py(k)];
-        zs = [-0.2   -0.2   0.3    0.3];
-        fill3(xs, ys, zs, [0.9 0.2 0.2], 'FaceAlpha', 0.6, 'EdgeColor', 'none');
-    end
-end
-%%%END
 player = show(robot, X(1, 1:numJoints+3)', 'Visuals','on');
 for k = 1:size(X, 1)
     show(robot, X(k, 1:numJoints+3)', 'PreservePlot', false, 'FastUpdate', true);
