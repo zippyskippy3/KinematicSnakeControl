@@ -33,6 +33,17 @@ X0 = [q0; dq0];
 table = [-1 1 1 -1; -0.2 -0.2 -0.1 -0.1];
 
 obstacle_stack = { table, [-1 -0.5 -0.5 -1; 0.5 0.5 1 1], [0.4 0.7 1 1 0.4; 0.6 0.4 0.6 1.2 1.2] };
+shift_y = 3.0; 
+for i = 1:numel(obstacle_stack)
+    obstacle_stack{i}(2,:) = obstacle_stack{i}(2,:) + shift_y;
+end
+    
+spacing = 1.0;
+for i = 1:numel(obstacle_stack)
+    
+   
+    obstacle_stack{i}(1,:) = obstacle_stack{i}(1,:) + (i-1)*spacing;
+end
 %%%END
 
 [T, X] = ode45(@(t, x) snakeDynamics(t, x, robot, 10), t_span, X0);
