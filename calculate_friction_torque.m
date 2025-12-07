@@ -19,7 +19,7 @@ function tau_friction = calculate_friction_torque(robot, q, dq)
         
         % World Frame Linear Velocity (x, y, z)
         v_linear_world = v_CoM(4:6);
-        disp(v_linear_world);
+        %disp(v_linear_world);
         
         % 2. Get the Link's Absolute Angle (Theta_i)
         % For a planar snake, the link's absolute angle (theta_i) is the Z-axis rotation.
