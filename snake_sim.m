@@ -83,5 +83,7 @@ function dx = snakeDynamics(t, x, robot, numJoints_total)
 
     ddq = M_full \ (tau_control - G_full - C_dq_full + tau_friction);
 
+    [dpx, dpy, ddpx, ddpy] = forward_kin(x);
+
     dx = [dq dtheta dpx dpy deta dphi; ddq ddtheta ddpy ddpy ddeta ddphi]; 
 end
