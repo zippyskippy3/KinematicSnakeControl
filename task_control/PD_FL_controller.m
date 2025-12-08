@@ -1,23 +1,59 @@
 function u = PD_FL_controller(robot, t, x, x_des, M_full, G_full, C_dq_full)
-    
-    numJoints_total = 10;
-    numJoints_snake = 7;
-    idx_snake = 4:10; 
 
-    q = x(idx_snake);    
-    dq = x(idx_snake + numJoints_total); 
-    
-    q_des = x_des(1:numJoints_snake); 
-    dq_des = x_des(numJoints_snake+1:end); 
-    
-    M_snake = M_full(idx_snake, idx_snake); 
-    G_snake = G_full(idx_snake);            
-    C_dq_snake = C_dq_full(idx_snake);      
+    % get the center of mass pose
 
-    Kp = diag(ones(1, 7) * 5); 
-    Kd = diag(ones(1, 7) * 0.5);
     
-    ddq_des = - Kp * scale_q_to_pi(q - q_des) - Kd * (dq - dq_des); 
-    
-    u = (C_dq_snake + G_snake) + M_snake * ddq_des; 
+
+    % control of the body joint angles
+
+    N = 8;
+
+    q_a = x(1:N-1);    
+    dq_a = x(13:19); 
+
+    theta = x(8);
+    dtheta = x(20);
+
+    phi_0 = x(11);
+    dphi_0 = x(23);
+
+    q_a_des = x_des(1:N-1); 
+    dq_a_des = x_des(13:19); 
+
+    theta_des = x_des(8); 
+    dtheta_des = x_des(20);
+
+    phi_0_des = x_des(11);
+    dphi_0_des = x_des(23);
+
+    Kp = diag(ones(1, N-1) * 5); 
+    Kd = diag(ones(1, N-1) * 0.5);
+
+    ddq_a_des = - Kp * scale_q_to_pi(q_a - q_a_des) - Kd * (dq_a - dq_a_des); 
+
+    % control of the head angle (theta)
+
+    M_11 = M_full(1:N-1, 1:N-1); 
+    M_22 = M_full(N:end, N:end);
+    M_21 = M_full(N:end, 1:N-1);
+    M_12 = M_full(1:N-1, N:end);
+
+    h1 = (C_dq_full(1:N-1) + G_full(1:N-1));
+    h2 = (C_dq_full(N:end) + G_full(N:end));
+
+    Beta = (-pinv(M_22)*M_21);
+    f = -(pinv(M_22)*h2);
+    f_theta = f(1);
+
+    Kp_theta = 20;
+    kd_theta = 1;
+
+    ddq_u_des = -pinv(M_22) * (h2 + M_21 * ddq_a_des);
+
+    ddtheta_des = ddq_u_des(1);
+
+    ddphi_0 = (-f_theta + ddtheta_des - Kp_u * (theta - theta_des) - Kd_u * (dtheta - dtheta_des) - Kp_phi * (phi_0 - phi_0_des) - Kd_phi * (dphi_0 - dphi_0_des)) / sum(Beta);
+
+    u = (M_11 - M_12 * M_22_inv * M_21) * (ddphi_0-ddq_a_des) * (h1 - M_12 * M_22_inv * h2);
+
 end
