@@ -24,8 +24,8 @@ function u = PD_FL_controller(robot, t, x, x_des, M_full, G_full, C_dq_full)
     theta_des = x_des(8); 
     dtheta_des = x_des(20);
 
-    phi_0_des = x_des(11);
-    dphi_0_des = x_des(23);
+    phi_0_des = 0;
+    dphi_0_des = 0;
 
     Kp = diag(ones(1, N-1) * 5); 
     Kd = diag(ones(1, N-1) * 0.5);

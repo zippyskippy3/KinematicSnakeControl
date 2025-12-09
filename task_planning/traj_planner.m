@@ -1,6 +1,6 @@
 function X_DES = traj_planner(t, x)
 
-% body angle desired
+% Internal body angles desired
 
 T = 2;
 
@@ -24,23 +24,21 @@ for i = 1:7
     ddq_des(i) = -alpha * sin(eta + (i-1)*delta) * deta^2;
 end
 
-% head angle desired
-
-% design parameter look ahead distance
+% Design parameter look ahead distance
 LAD = 1.4;
 
 py = x(10);
 dpy = x(22);
 
-% aligned with the x axis as the goal path
+% Aligned with the x axis as the goal path
 py_des = 0;
 
+% Head angle desired
 theta_des = -atan((py_des - py) / LAD);
 dtheta_des = -(1 / (1 + ((py_des - py) / LAD)^2)) * (-dpy / LAD);
 ddtheta_des = 0;
 
 X_DES = [q_des; theta_des; dq_des; dtheta_des; ddq_des; ddtheta_des];
-
 
 end
 
