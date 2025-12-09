@@ -1,106 +1,42 @@
-% function X_DES = traj_planner(t, x)
-% 
-% % body angle desired
-% 
-% alpha = pi / 6;
-% delta = 36 * pi / 180;
-% eta = 70 * pi * t / 180;
-% deta = 70 * pi / 180;
-% 
-% q_des = zeros(7, 1);
-% dq_des = zeros(7, 1);
-% 
-% for i = 1:7
-%     q_des(i) = alpha * sin(eta + (i-1)*delta) + phi_0;
-%     dq_des(i) = -alpha * cos(eta + (i-1)*delta) * deta;
-%     ddq_des(i) = -alpha * sin(eta + (i-1)*delta) * deta^2;
-% end
-% 
-% % head angle desired
-% 
-% % design parameter look ahead distance
-% LAD = 1.4;
-% 
-% py = x(10);
-% 
-% % aligned with the x axis as the goal path
-% py_des = 0;
-% 
-% theta_des = -atan(py_des - py / LAD);
-% 
-% X_DES = [q_des theta_des; dq_des dtheta_des];
-% 
-% 
-% end
+function X_DES = traj_planner(t, x, gamma_in)
+% Generates the desired joint angle trajectory and the desired head angle
+% (theta_des) for path following.
 
-function X_DES = traj_planner(t, x_full)
-    % traj_planner Calculates VHC references for a snake robot
-    % Output X_DES = [Phi_des; dPhi_des; ddPhi_des] (24x1 vector)
 
-    % --- Path Definition ---
-    py_des = 0;      % Desired lateral position (Straight line on X)
-    dpy_des = 0;     % Velocity of path
-    d2py_des = 0;    % Acceleration of path
-    
-    % --- Constants ---
-    N_JOINTS = 7;
-    N_AUGMENTED = 12;
-    
-    alpha = pi / 4;             
-    delta = 1;      
-    deta = 0.5;       % Phase velocity
-    LAD = 1.4;                  % Look Ahead Distance
-    
-    % --- State Extraction ---
-    % Mapping: [q_a(7); theta; px; py; eta; phi_0]
-    py = x_full(10);            
-    dpy = x_full(10 + N_AUGMENTED); % Velocity index 22
-    
-    phi_0 = x_full(12);         
-    dphi_0 = x_full(12 + N_AUGMENTED); 
-    d2phi_0 = 0; % Feedforward assumption
-    
-    eta = deta * t; % Constant phase progression
-    
-    % Initialize Vectors
-    Phi_des = zeros(8, 1);
-    dPhi_des = zeros(8, 1);
-    ddPhi_des = zeros(8, 1); 
+% --- State Extraction (from 20-element vector x) ---
+theta = x(8);   % Current head angle (theta)
+py = x(10);     % Current base position Y
+dpy = x(20);    % Current base velocity Y
 
-    % --- 1. Joint VHCs (Serpenoid Curve) ---
-    for i = 1:N_JOINTS
-        offset = (i-1) * delta;
-        
-        % Sinusoid derivatives
-        S_i = alpha * sin(eta + offset);
-        dS_i = alpha * cos(eta + offset) * deta;
-        d2S_i = -alpha * sin(eta + offset) * deta^2;
-        
-        % Constraint: q_i = S_i + phi_0
-        Phi_des(i) = S_i + phi_0;
-        dPhi_des(i) = dS_i + dphi_0;        
-        ddPhi_des(i) = d2S_i + d2phi_0;     
-    end
+% --- Path Following Setup (Pure Pursuit) ---
+LAD = 1.4;      % Look Ahead Distance
+py_des = 0;     % Target path is the x-axis (py = 0)
+
+q_des = zeros(7, 1);
+dq_des = zeros(7, 1);
+
+amplitude = deg2rad(45.0);
+wavelength = 6.0;
+freq = 2 * pi * 0.1;
+
+q_des = zeros(7, 1);
+dq_des = zeros(7, 1);
+
+for i = 1:7
+    phase_position = (2 * pi * i) / wavelength;
+    phase_time = freq * t;
+    phase = phase_position + phase_time;
     
-    % --- 2. Head Angle VHC (Steering) ---
-    % Steering Law: Point head towards path
-    py_error = py_des - py;
-    theta_des = -atan(py_error / LAD);
+    q_des(i) = amplitude * sin(phase);
     
-    % 1st Derivative (Chain Rule)
-    % d/dt(-atan(u)) = -1/(1+u^2) * du/dt
-    u_val = py_error / LAD;
-    du_dt = (dpy_des - dpy) / LAD; 
-    dtheta_des = - (1 / (1 + u_val^2)) * du_dt;
-    
-    % 2nd Derivative (Simplified for stability)
-    d2theta_des = 0; 
-    
-    % Assign Head Constraints (Index 8)
-    Phi_des(8) = theta_des;
-    dPhi_des(8) = dtheta_des;
-    ddPhi_des(8) = d2theta_des; 
-    
-    % --- Output Construction ---
-    X_DES = [Phi_des; dPhi_des; ddPhi_des];
+    dq_des(i) = -amplitude * freq * cos(phase);
+end
+
+% 2. Calculate desired head angle (theta_des)
+% Pure Pursuit steers the robot towards the path point LAD away.
+theta_des = -atan((py - py_des) / LAD); 
+dtheta_des = -(1 / (1 + ((py - py_des) / LAD)^2)) * (dpy / LAD); 
+
+% X_DES: [q_des (7); theta_des (1); dq_des (7); dtheta_des (1)] 
+X_DES = [q_des; theta_des; dq_des; dtheta_des]; 
 end

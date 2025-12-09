@@ -11,36 +11,32 @@ robot = importrobot('./snake_robot/snake_description/urdf/sevenJoints.urdf', Mes
 
 robot.DataFormat = 'column';
 
-N = 8;
+numJoints = 7;
 
-t_span = [0 15];
+t_span = [0 60];
 
-alpha_0 = deg2rad(45);
-q_a_0 = zeros(N-1, 1);
-delta = 36 * pi / 180;
-eta_0 = (2 * pi) / 2;
+amp = deg2rad(45);
+q_snake_0 = zeros(7, 1);
 
 for i = 1:7
-    q_a_0(i) = alpha_0 * sin(eta_0 + (i-1)*delta);
+    phase_position = (2 * pi * i) / 6;
+    
+    q_snake_0(i) = amp * sin(phase_position);
 end
 
-q0 = [q_a_0; 0; 0; 0;];
-dq0 = zeros(10,1); 
-
-cm_pos = centerOfMass(robot, q0);
-px_0 = cm_pos(1);
-py_0 = cm_pos(2);
-
-X0 = [q0; 0; 0; eta_0; 0; dq0; 0; 0; 0; 0];
+q_base_0 = [0; 0; 0]; 
+q0 = [q_base_0; q_snake_0];
+dq0 = zeros(10, 1); 
+X0 = [q0; dq0];
 
 [T, X] = ode45(@(t, x) snakeDynamics(t, x, robot, 10), t_span, X0);
 
 figure;
-plot(T, rad2deg(X(:, 1:7)));
+plot(T, rad2deg(X(:, 4:10)));
 title('Joint Positions Over Time');
 xlabel('Time (s)');
 ylabel('Joint Angle (Degrees)');
-legend(arrayfun(@(i) sprintf('Joint %d', i), 1:7, 'UniformOutput', false), 'Location', 'southeast');
+legend(arrayfun(@(i) sprintf('Joint %d', i), 1:numJoints, 'UniformOutput', false), 'Location', 'southeast');
 grid on;
 
 % ground plane visualization
@@ -58,38 +54,31 @@ patch([-ground_size, ground_size, ground_size, -ground_size], ...
       [-ground_size, -ground_size, ground_size, ground_size], ...
       [-0.2, -0.2, -0.2, -0.2], [0.8 0.8 0.8], 'FaceAlpha', 0.5);
 
-player = show(robot, X(1, 1:10)', 'Visuals','on');
+player = show(robot, X(1, 1:numJoints+3)', 'Visuals','on');
 for k = 1:size(X, 1)
-    show(robot, X(k, 1:10)', 'PreservePlot', false, 'FastUpdate', true);
+    show(robot, X(k, 1:numJoints+3)', 'PreservePlot', false, 'FastUpdate', true);
     drawnow;
 end
 hold off;
 
 function dx = snakeDynamics(t, x, robot, numJoints_total) 
-
-    q = x(1:10); 
-    dq = x(15:24);
-    dtheta = x(20);
-    deta = x(23);
-    dphi = x(24);
+    
+    q = x(1:numJoints_total); 
+    dq = x(numJoints_total+1:end); 
 
     M_full = massMatrix(robot, q);
     G_full = gravityTorque(robot, q);
     C_dq_full = velocityProduct(robot, q, dq);
+    
+    X_DES = traj_planner(t); 
 
-    X_DES = traj_planner(t, x); 
-
-    [tau_control, ddphi] = PD_FL_controller(robot, t, x, X_DES, M_full, G_full, C_dq_full); 
-
-    tau_applied = [tau_control; zeros(3,1)];
-
+    tau_pd_internal = PD_FL_controller(robot, t, x, X_DES, M_full, G_full, C_dq_full); 
+    
+    tau_control = [zeros(3, 1); tau_pd_internal]; 
+    
     tau_friction = calculate_friction_torque(robot, q, dq);
-
-    ddq = M_full \ (tau_applied - G_full - C_dq_full + tau_friction);
-
-    [dpx_cm, dpy_cm, ddpx_cm, ddpy_cm] = forward_kin(robot, x, ddq);
-
-    ddeta = 0;
-
-    dx = [dq; dpx_cm; dpy_cm; deta; dphi; ddq; ddpx_cm; ddpy_cm; ddeta; ddphi]; 
+    
+    ddq = M_full \ (tau_control - G_full - C_dq_full + tau_friction);
+    
+    dx = [dq; ddq]; 
 end
