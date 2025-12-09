@@ -13,7 +13,7 @@ robot.DataFormat = 'column';
 
 N = 8;
 
-t_span = [0 60];
+t_span = [0 15];
 
 alpha_0 = deg2rad(45);
 q_a_0 = zeros(N-1, 1);
@@ -25,22 +25,22 @@ for i = 1:7
 end
 
 q0 = [q_a_0; 0; 0; 0;];
-dq0 = zeros(12,1); 
+dq0 = zeros(10,1); 
 
 cm_pos = centerOfMass(robot, q0);
 px_0 = cm_pos(1);
 py_0 = cm_pos(2);
 
-X0 = [q0; 0; px_0; py_0; eta_0; 0; dq0; 0; 0; 0; 0; 0];
+X0 = [q0; 0; 0; eta_0; 0; dq0; 0; 0; 0; 0];
 
 [T, X] = ode45(@(t, x) snakeDynamics(t, x, robot, 10), t_span, X0);
 
 figure;
-plot(T, rad2deg(X(:, 1:numJoints)));
+plot(T, rad2deg(X(:, 1:7)));
 title('Joint Positions Over Time');
 xlabel('Time (s)');
 ylabel('Joint Angle (Degrees)');
-legend(arrayfun(@(i) sprintf('Joint %d', i), 1:numJoints, 'UniformOutput', false), 'Location', 'southeast');
+legend(arrayfun(@(i) sprintf('Joint %d', i), 1:7, 'UniformOutput', false), 'Location', 'southeast');
 grid on;
 
 % ground plane visualization
@@ -58,9 +58,9 @@ patch([-ground_size, ground_size, ground_size, -ground_size], ...
       [-ground_size, -ground_size, ground_size, ground_size], ...
       [-0.2, -0.2, -0.2, -0.2], [0.8 0.8 0.8], 'FaceAlpha', 0.5);
 
-player = show(robot, X(1, 1:numJoints+3)', 'Visuals','on');
+player = show(robot, X(1, 1:10)', 'Visuals','on');
 for k = 1:size(X, 1)
-    show(robot, X(k, 1:numJoints+3)', 'PreservePlot', false, 'FastUpdate', true);
+    show(robot, X(k, 1:10)', 'PreservePlot', false, 'FastUpdate', true);
     drawnow;
 end
 hold off;
@@ -87,9 +87,9 @@ function dx = snakeDynamics(t, x, robot, numJoints_total)
 
     ddq = M_full \ (tau_applied - G_full - C_dq_full + tau_friction);
 
-    [dpx_cm, dpy_cm, ddpx_cm, ddpy_cm] = forward_kin(robot, x);
+    [dpx_cm, dpy_cm, ddpx_cm, ddpy_cm] = forward_kin(robot, x, ddq);
 
     ddeta = 0;
 
-    dx = [dq dtheta dpx dpy dpx_cm dpy_cm deta dphi; ddq ddtheta ddpx ddpy ddpx_cm ddpy_cm ddeta ddphi]; 
+    dx = [dq; dpx_cm; dpy_cm; deta; dphi; ddq; ddpx_cm; ddpy_cm; ddeta; ddphi]; 
 end

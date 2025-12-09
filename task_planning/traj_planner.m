@@ -4,12 +4,12 @@ function X_DES = traj_planner(t, x)
 
 T = 2;
 
-alpha = pi / 6;
-delta = 36 * pi / 180;
+alpha = deg2rad(45.0);
+delta = (2 * pi) / 6.0;
 eta = x(11);
 phi_0 = x(12);
 dphi_0 = x(24);
-deta = 2 * pi / T;
+deta = 0.2 * pi / T;
 
 q_des = zeros(7, 1);
 dq_des = zeros(7, 1);
@@ -25,7 +25,7 @@ for i = 1:7
 end
 
 % Design parameter look ahead distance
-LAD = 1.4;
+LAD = 0.5;
 
 py = x(10);
 dpy = x(22);

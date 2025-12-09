@@ -18,17 +18,16 @@ t_span = [0 60];
 alpha_0 = deg2rad(45);
 q_a_0 = zeros(N-1, 1);
 delta = 36 * pi / 180;
-eta_0 = (2 * pi * i) / 6;
+eta_0 = (2 * pi) / 2;
 
 for i = 1:7
     q_a_0(i) = alpha_0 * sin(eta_0 + (i-1)*delta);
 end
 
-q_u_0 = [0; 0; 0; 0; 0]; 
-q0 = [q_a_0; q_u_0];
+q0 = [q_a_0; 0; 0; 0;];
 dq0 = zeros(12,1); 
 
-cm_pos = centerOfMass(robot, [0; 0; 0; 0; 0; 0; 0; 0; 0; 0]);
+cm_pos = centerOfMass(robot, q0);
 px_0 = cm_pos(1);
 py_0 = cm_pos(2);
 
@@ -68,8 +67,8 @@ hold off;
 
 function dx = snakeDynamics(t, x, robot, numJoints_total) 
 
-    q = x(1:7); 
-    dq = x(13:19);
+    q = x(1:10); 
+    dq = x(15:24);
     dtheta = x(20);
     deta = x(23);
     dphi = x(24);
@@ -82,13 +81,15 @@ function dx = snakeDynamics(t, x, robot, numJoints_total)
 
     [tau_control, ddphi] = PD_FL_controller(robot, t, x, X_DES, M_full, G_full, C_dq_full); 
 
+    tau_applied = [tau_control; zeros(3,1)];
+
     tau_friction = calculate_friction_torque(robot, q, dq);
 
-    ddq = M_full \ (tau_control - G_full - C_dq_full + tau_friction);
+    ddq = M_full \ (tau_applied - G_full - C_dq_full + tau_friction);
 
-    [dpx, dpy, ddpx, ddpy] = forward_kin(x);
+    [dpx_cm, dpy_cm, ddpx_cm, ddpy_cm] = forward_kin(robot, x, ddq);
 
     ddeta = 0;
 
-    dx = [dq dtheta dpx dpy deta dphi; ddq ddtheta ddpx ddpy ddeta ddphi_0]; 
+    dx = [dq; dpx_cm; dpy_cm; deta; dphi; ddq; ddpx_cm; ddpy_cm; ddeta; ddphi]; 
 end
