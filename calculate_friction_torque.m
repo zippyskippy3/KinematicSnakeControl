@@ -1,11 +1,9 @@
 function tau_friction = calculate_friction_torque(robot, q, dq)
     
-    % Viscous Friction Coefficients (Section II-B)
-    % c_n MUST be significantly greater than c_t for propulsion (Property 1) [cite: 1492]
-    c_t = 0.5;  % Tangential (forward) viscous friction coefficient
-    c_n = 20;  % Normal (sideways) viscous friction coefficient
+    % Viscous Friction Assumption
+    c_t = 0.5;  % Tangential
+    c_n = 20;  % Normal 
     
-    % Initialize total friction torque vector (size: total DoFs)
     tau_friction_vector = zeros(length(dq), 1);
     
     % Loop through each link (assuming links are 1 to N)
@@ -13,7 +11,7 @@ function tau_friction = calculate_friction_torque(robot, q, dq)
         body_name = robot.BodyNames{i};
         body = robot.getBody(body_name);
         
-        % 1. Get the Jacobian (J_CoM) and World Velocity (v_CoM)
+        % 1. Get the Jacobian and World Velocity 
         J_CoM = geometricJacobian(robot, q, body_name);
         v_CoM = J_CoM * dq;
         
@@ -30,11 +28,11 @@ function tau_friction = calculate_friction_torque(robot, q, dq)
         % T_body(1:3, 1:3) is the rotation matrix R. theta = atan2(R(2,1), R(1,1)).
         theta_i = atan2(T_body(2,1), T_body(1,1));
         
-        % Convert velocity to 2D World-frame for the calculation (ignore Z)
+        % Convert velocity to 2D World-frame for the calculation 
         dot_x_i = v_linear_world(1);
         dot_y_i = v_linear_world(2);
         
-        % 3. Calculate Friction Matrix Components (Eq. 2a - 2c) [cite: 1453, 1454, 1455]
+        % 3. Calculate Friction Matrix Components
         cos_sq = cos(theta_i)^2;
         sin_sq = sin(theta_i)^2;
         sin_cos = sin(theta_i) * cos(theta_i);
@@ -43,21 +41,19 @@ function tau_friction = calculate_friction_torque(robot, q, dq)
         F_xy = (c_t - c_n) * sin_cos;
         F_y  = c_t * sin_sq + c_n * cos_sq;
         
-        % 4. Construct the Friction Matrix (F_matrix)
+        % 4. Construct the Friction Matrix 
         F_matrix = [F_x, F_xy; F_xy, F_y];
         
-        % 5. Calculate the Friction Force (f_i) in the World Frame (Eq. 1) [cite: 1449]
-        % f_i = -F_matrix * [dot_x_i; dot_y_i]
+        % 5. Calculate the Friction Force in the World Frame 
         f_i_xy = -F_matrix * [dot_x_i; dot_y_i];
         
         % 6. Apply Friction Force as Torque
         % The force must be a 3D vector for the 6xN Jacobian transpose
         F_friction_3D = [f_i_xy(1); f_i_xy(2); 0]; 
         
-        % Extract the linear part of the Jacobian (J_CoM_linear is 3xN)
+        % Extract the linear part of the Jacobian 
         J_CoM_linear = J_CoM(4:6, :);
         
-        % tau_friction_link = J_CoM_linear' * F_friction_3D
         tau_friction_link = J_CoM_linear' * F_friction_3D;
         
         

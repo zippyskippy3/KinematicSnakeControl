@@ -26,12 +26,13 @@ end
 
 q_u_0 = [0; 0; 0; 0; 0]; 
 q0 = [q_a_0; q_u_0];
-dq0 = zeros(12, 1); 
-X0 = [q0 0 px_0 py_0 eta_0 0;dq0 0 0 0 0 0];
+dq0 = zeros(12,1); 
 
-cm_pos = centerOfMass(robot, X0);
+cm_pos = centerOfMass(robot, [0; 0; 0; 0; 0; 0; 0; 0; 0; 0]);
 px_0 = cm_pos(1);
 py_0 = cm_pos(2);
+
+X0 = [q0; 0; px_0; py_0; eta_0; 0; dq0; 0; 0; 0; 0; 0];
 
 [T, X] = ode45(@(t, x) snakeDynamics(t, x, robot, 10), t_span, X0);
 
@@ -67,8 +68,11 @@ hold off;
 
 function dx = snakeDynamics(t, x, robot, numJoints_total) 
 
-    q = x(1:numJoints_total); 
-    dq = x(numJoints_total+1:end);
+    q = x(1:7); 
+    dq = x(13:19);
+    dtheta = x(20);
+    deta = x(23);
+    dphi = x(24);
 
     M_full = massMatrix(robot, q);
     G_full = gravityTorque(robot, q);
@@ -82,5 +86,9 @@ function dx = snakeDynamics(t, x, robot, numJoints_total)
 
     ddq = M_full \ (tau_control - G_full - C_dq_full + tau_friction);
 
-    dx = [dq dtheta dpx dpy deta dphi; ddq ddtheta ddpy ddpy ddeta ddphi]; 
+    [dpx, dpy, ddpx, ddpy] = forward_kin(x);
+
+    ddeta = 0;
+
+    dx = [dq dtheta dpx dpy deta dphi; ddq ddtheta ddpx ddpy ddeta ddphi_0]; 
 end

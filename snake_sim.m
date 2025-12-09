@@ -68,8 +68,11 @@ hold off;
 
 function dx = snakeDynamics(t, x, robot, numJoints_total) 
 
-    q = x(1:numJoints_total); 
-    dq = x(numJoints_total+1:end);
+    q = x(1:7); 
+    dq = x(13:19);
+    dtheta = x(20);
+    deta = x(23);
+    dphi = x(24);
 
     M_full = massMatrix(robot, q);
     G_full = gravityTorque(robot, q);
@@ -85,5 +88,7 @@ function dx = snakeDynamics(t, x, robot, numJoints_total)
 
     [dpx, dpy, ddpx, ddpy] = forward_kin(x);
 
-    dx = [dq dtheta dpx dpy deta dphi; ddq ddtheta ddpy ddpy ddeta ddphi]; 
+    ddeta = 0;
+
+    dx = [dq dtheta dpx dpy deta dphi; ddq ddtheta ddpx ddpy ddeta ddphi_0]; 
 end

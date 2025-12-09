@@ -1,10 +1,11 @@
+% Applies control to the internal joint angles and to phi_0
+% Theta, px, and py are outcomes of the control due to the state
+% eta is included in the state because it takes the time dependancy out
+% of the reference joint trajectories
+
 function u = PD_FL_controller(robot, t, x, x_des, M_full, G_full, C_dq_full)
-
-    % get the center of mass pose
-
-    
-
-    % control of the body joint angles
+   
+    % Control of the body joint angles
 
     N = 8;
 

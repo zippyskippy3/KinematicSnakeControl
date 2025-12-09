@@ -2,10 +2,12 @@ function X_DES = traj_planner(t, x)
 
 % body angle desired
 
+T = 2;
+
 alpha = pi / 6;
 delta = 36 * pi / 180;
-eta = 70 * pi * t / 180;
-deta = 70 * pi / 180;
+eta = x(11);
+deta = 2 * pi / T;
 
 q_des = zeros(7, 1);
 dq_des = zeros(7, 1);
@@ -13,6 +15,7 @@ dq_des = zeros(7, 1);
 for i = 1:7
     q_des(i) = alpha * sin(eta + (i-1)*delta) + phi_0;
     dq_des(i) = -alpha * cos(eta + (i-1)*delta) * deta;
+    dq_des(i) = -alpha * sin(eta + (i-1)*delta) * deta^2;
 end
 
 % head angle desired
